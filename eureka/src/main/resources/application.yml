@@ -1,0 +1,15 @@
+server:
+  ip: localhost
+  port: 8082
+eureka:
+  instance:
+    leaseRenewalIntervalInSeconds: 5
+    leaseExpirationDurationInSeconds: 2
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8082/eureka
+    healthcheck:
+      enabled: true
+spring:
+  application:
+    name: eureka
