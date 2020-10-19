@@ -18,4 +18,4 @@ eureka:
       enabled: true
 spring:
   application:
-    name: zuul
+    name: gateway
