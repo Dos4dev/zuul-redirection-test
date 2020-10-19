@@ -1,14 +1,13 @@
 package com.example.zuul.redirection.config;
 
-import org.springframework.cloud.netflix.zuul.filters.Route;
 import org.springframework.cloud.netflix.zuul.filters.RouteLocator;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 import springfox.documentation.swagger.web.SwaggerResource;
 import springfox.documentation.swagger.web.SwaggerResourcesProvider;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Retrieves all registered microservices Swagger resources.
@@ -25,18 +24,10 @@ public class RegistrySwaggerResourcesProvider implements SwaggerResourcesProvide
 
     @Override
     public List<SwaggerResource> get() {
-        List<SwaggerResource> resources = new ArrayList<>();
 
-
-        resources.add(swaggerResource("eureka", "/v2/api-docs"));
-
-        //Add the registered microservices swagger docs as additional swagger resources
-        List<Route> routes = routeLocator.getRoutes();
-        routes.forEach(route -> {
-            resources.add(swaggerResource(route.getId(), route.getFullPath().replace("**", "v2/api-docs")));
-        });
-
-        return resources;
+        return routeLocator.getRoutes().stream().map(route ->
+                swaggerResource(route.getId(), route.getFullPath().replace("**", "v2/api-docs"))
+        ).collect(Collectors.toList());
     }
 
     private SwaggerResource swaggerResource(String name, String location) {
